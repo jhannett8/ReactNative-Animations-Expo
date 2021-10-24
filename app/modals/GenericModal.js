@@ -7,21 +7,16 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import PropTypes from "prop-types";
 import { colors } from "../Theme";
 
-function Modal({
-  ismodalVisible,
-  setIsModalVisible,
-}) {
-  const insets = useSafeAreaInsets();
+function GenericModal({ isModalVisible, setIsModalVisible }) {
   const topFlex = 1;
   const bottomFlex = 1;
 
   return (
-    <Modal animationType="slide" transparent={true} visible={ismodalVisible}>
+    <Modal animationType="slide" transparent={true} visible={isModalVisible}>
       <>
         <View
           style={{
@@ -37,7 +32,7 @@ function Modal({
           />
         </View>
         <TouchableWithoutFeedback
-          onPress={() => setIsModalVisible(!ismodalVisible)}
+          onPress={() => setIsModalVisible(!isModalVisible)}
         >
           <View style={{ flex: topFlex }} />
         </TouchableWithoutFeedback>
@@ -48,17 +43,15 @@ function Modal({
               bottom: 0,
               marginHorizontal: 15,
               marginVertical: 15,
-              backgroundColor: colors.charcoal,
+              backgroundColor: colors.slategray,
               borderRadius: 10,
             },
           ]}
         >
-          <View style={[{ flex: 1 }, styles.container]}>
+          <View style={{ flex: 1 }}>
             <View style={styles.modalView}>
               <View style={styles.itemContainer}>
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: "center" }}
-                >
+                <TouchableOpacity style={{ flex: 1, justifyContent: "center" }}>
                   <Text style={[styles.itemText, { color: colors.red }]}>
                     Text
                   </Text>
@@ -66,9 +59,7 @@ function Modal({
               </View>
               <View style={styles.separator} />
               <View style={styles.itemContainer}>
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: "center" }}
-                >
+                <TouchableOpacity style={{ flex: 1, justifyContent: "center" }}>
                   <Text style={[styles.itemText, { color: colors.red }]}>
                     Text
                   </Text>
@@ -76,45 +67,33 @@ function Modal({
               </View>
               <View style={styles.separator} />
               <View style={styles.itemContainer}>
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: "center" }}
-                >
+                <TouchableOpacity style={{ flex: 1, justifyContent: "center" }}>
                   <Text style={styles.itemText}>Text</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.separator} />
               <View style={styles.itemContainer}>
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: "center" }}
-                >
-                  <Text style={styles.itemText}>
-                    Text
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.separator} />
-              <View style={styles.itemContainer}>
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: "center" }}
-                >
+                <TouchableOpacity style={{ flex: 1, justifyContent: "center" }}>
                   <Text style={styles.itemText}>Text</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.separator} />
               <View style={styles.itemContainer}>
-                <TouchableOpacity
-                  style={{ flex: 1, justifyContent: "center" }}
-                >
+                <TouchableOpacity style={{ flex: 1, justifyContent: "center" }}>
+                  <Text style={styles.itemText}>Text</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.separator} />
+              <View style={styles.itemContainer}>
+                <TouchableOpacity style={{ flex: 1, justifyContent: "center" }}>
                   <Text style={styles.itemText}>Text</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </View>
-        <TouchableOpacity onPress={() => setIsModalVisible(!ismodalVisible)}>
-          <View
-            style={[styles.cancelContainer, { marginBottom: insets.bottom }]}
-          >
+        <TouchableOpacity onPress={() => setIsModalVisible(!isModalVisible)}>
+          <View style={[styles.cancelContainer, { marginBottom: 30 }]}>
             <Text style={styles.cancelText}>Cancel</Text>
           </View>
         </TouchableOpacity>
@@ -123,38 +102,9 @@ function Modal({
   );
 }
 const styles = StyleSheet.create({
-  modalView: {
-    flex: 1,
-  },
-  overlay: {
-    flex: 1,
-    position: "absolute",
-    right: 0,
-    bottom: 0,
-    left: 0,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: colors.lightGrey,
-    opacity: 0.2,
-    margin: 5,
-  },
-  itemText: {
-    color: colors.white,
-    fontSize: 18,
-    textAlign: "center",
-  },
-  itemContainer: {
-    flex: 1,
-  },
-  cancelText: {
-    color: colors.white,
-    textAlign: "center",
-    fontSize: 18,
-  },
   cancelContainer: {
     height: 50,
-    backgroundColor: colors.charcoal,
+    backgroundColor: colors.slategray,
     flexDirection: "row",
     padding: 5,
     marginHorizontal: 15,
@@ -162,11 +112,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  cancelText: {
+    color: colors.darkRed,
+    textAlign: "center",
+    fontSize: 18,
+  },
+  itemContainer: {
+    flex: 1,
+  },
+  itemText: {
+    color: colors.white,
+    fontSize: 18,
+    textAlign: "center",
+  },
+  modalView: {
+    flex: 1,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.white,
+    opacity: 0.2,
+    margin: 5,
+  },
 });
-Modal.propTypes = {
+
+GenericModal.propTypes = {
   setIsModalVisible: PropTypes.func.isRequired,
-  setIsShareVisible: PropTypes.func.isRequired,
-  setIsCommentVisible: PropTypes.func.isRequired,
 };
 
-export default Modal;
+export default GenericModal;

@@ -1,118 +1,186 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, TouchableWithoutFeedbackBase, View } from 'react-native';
+import React, { useState, useRef } from "react";
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
 
 import HeartAnimation from "./app/animations/Heart";
-import FadeAnimation from './app/animations/Fade';
-import Modal from './app/modals/Modal';
+import FadeAnimation from "./app/animations/Fade";
+import GenericModal from "./app/modals/GenericModal";
+import Like from "./app/icons/Like";
+import { colors } from "./app/Theme";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
-    //Like State Variables
-    const [isLiked, setIsLiked] = useState(false);
-    const [numberOfLikes, setNumberOfLikes] = useState(13);
-    //Animation Refs
-    const animationHeartRef = useRef();
-    const animationFadeRef = useRef();
+  //Like
+  const [isLiked, setIsLiked] = useState(false);
+  const [numberOfLikes, setNumberOfLikes] = useState(13);
+  //Modals
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  //Animation Refs
+  const animationHeartRef = useRef();
+  const animationFadeRef = useRef();
+  //SinglePress vs DoublePress
+  const [lastPress, setLastPress] = useState(0);
+  const timeout = useRef();
+  //Fade Animation Bool
+  const [isFadeLoaded, setIsFadeLoaded] = useState(false);
 
-     
-    const handleLike = () => {
-      // API CALL
-      setIsLiked((prevLike) => !prevLike);
-      if (isLiked == true) {
-        setNumberOfLikes(numberOfLikes - 1);
-        setIsLiked(false);
-      } else {
-        setNumberOfLikes(numberOfLikes + 1);
-        setIsLiked(true);
-        heartAnimation();
-      }
-    };
+  const handleDoublePress = () => {
+    // API CALL
+    setIsLiked((prevLike) => !prevLike);
+    if (isLiked == true) {
+      setNumberOfLikes(numberOfLikes - 1);
+      setIsLiked(false);
+    } else {
+      setNumberOfLikes(numberOfLikes + 1);
+      setIsLiked(true);
+      heartAnimation();
+    }
+  };
 
-    const heartAnimation = () => {
-      if (animationHeartRef.current) {
-        animationHeartRef.current.heartAnimation();
-      }
-    };
+  const handleFade = () => {
+    fadeAnimation();
+  }
 
-    const handleSinglePress = async () => {
-          fadeOutPlayAnimation();
-          fadeInPlayAnimation();
-        };
-    
-    const onManualPress = async () => {
-      const time = new Date().getTime();
-      const delta = time - lastPress;
-      const DOUBLE_PRESS_DELAY = 300;
-      //Double Tap Event
-      if (delta < DOUBLE_PRESS_DELAY) {
-        handleLike();
-        setLastPress(time);
-        clearTimeout(timeout.current);
-      }
-      //Single Tap Event
-      else {
-        timeout.current = setTimeout(() => {
-          handleSinglePress();
-        }, DOUBLE_PRESS_DELAY);
-        setLastPress(time);
-      }
-    };
+  const handleLike = () => {
+    setIsLiked((prevLike) => !prevLike);
+    if (isLiked == true) {
+      setNumberOfLikes(numberOfLikes - 1);
+      setIsLiked(false);
+    } else {
+      setNumberOfLikes(numberOfLikes + 1);
+      setIsLiked(true);
+    }
+  }
 
-    const onManualLongPress = () => {
-      setIsModalVisible(true);
-    };
+  
+  const handleSinglePress = async () => {
+    if (!isFadeLoaded) {
+      fadeInAnimation();
+      setIsFadeLoaded(true);
+    }
+    if (isFadeLoaded) {
+      fadeOutAnimation();
+      setIsFadeLoaded(false);
+    }
+  };
+
+  const onManualPress = async () => { 
+    const time = new Date().getTime();
+    const delta = time - lastPress;
+    const DOUBLE_PRESS_DELAY = 300;
+    //Double Tap Event
+    if (delta < DOUBLE_PRESS_DELAY) {
+      handleDoublePress();
+      setLastPress(time);
+      clearTimeout(timeout.current);
+    }
+    //Single Tap Event
+    else {
+      timeout.current = setTimeout(() => {
+        handleSinglePress();
+      }, DOUBLE_PRESS_DELAY);
+      setLastPress(time);
+    }
+  };
+
+  const onManualLongPress = () => {
+    setIsModalVisible(true);
+  };
+  
+  const fadeAnimation = () => {
+    if (animationFadeRef.current) {
+      animationFadeRef.current.fadeAnimation();
+    }
+  }
+  
+  const fadeInAnimation = () => {
+    if (animationFadeRef.current) {
+      animationFadeRef.current.fadeInAnimation();
+    }
+  };
+  
+  const fadeOutAnimation = () => {
+    if (animationFadeRef.current) {
+      animationFadeRef.current.fadeOutAnimation();
+    }
+  };
+  
+  const heartAnimation = () => {
+    if (animationHeartRef.current) {
+      animationHeartRef.current.heartAnimation();
+    }
+  };
 
   return (
-    <>
-    <TouchableWithoutFeedback  
-      onPress={onManualPress}
-      onLongPress={onManualLongPress}
-    >
-      <View style={styles.container}>
-          <Text>***Single tap for fade Animation***</Text>
-          <Text>***Double tap to like/unlike***</Text>
-        <View style={{flexDirection: 'column-reverse'}}>
-          <TouchableWithoutFeedback>
-            <View style={styles.buttonContainer}>
-              <View style={styles.button}>
-                <Text>Like Animation</Text>
-              </View>
+    <View style={{ marginTop: 45, flex: 1 }}>
+      <TouchableWithoutFeedback
+        onPress={onManualPress}
+        onLongPress={onManualLongPress}
+      >
+        <View style={styles.container}>
+          <View style={{ alignItems: "center" }}>
+            <Text>***Single tap for fade Animation***</Text>
+            <Text>***Double tap to like/unlike***</Text>
+          </View>
+          {/* Animations */}
+          <HeartAnimation ref={animationHeartRef} />
+          <FadeAnimation ref={animationFadeRef} />
+          <View style={{ flexDirection: "column-reverse" }}>
+            <View style={styles.icon}>
+              <Like
+                isLiked={isLiked}
+                numberOfLikes={numberOfLikes}
+                handleLike={handleDoublePress}
+                iconSize={31}
+                textSize={12}
+                textColor={colors.darkGray}
+              />
             </View>
-          </TouchableWithoutFeedback>
-          <TouchableWithoutFeedback>
-            <View style={styles.buttonContainer}>
-              <View style={styles.button}>
-                <Text>Fade Animation</Text>
+            <TouchableWithoutFeedback onPress={handleLike}>
+              <View style={styles.buttonContainer}>
+                <View style={styles.button}>
+                  <Text>Like Animation</Text>
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={handleFade}>
+              <View style={styles.buttonContainer}>
+                <View style={styles.button}>
+                  <Text>Fade Animation</Text>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
         </View>
-        {/* Animations */}
-        <HeartAnimation ref={animationHeartRef} />
-        <FadeAnimation ref={animationFadeRef} />
-      </View>
-    </TouchableWithoutFeedback>
-    <Modal/>
-    </>
+      </TouchableWithoutFeedback>
+      <GenericModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    height: 80,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  button: {
+    width: "85%",
+    height: "100%",
+    marginHorizontal: 5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
+    justifyContent: "center",
   },
-  buttonContainer: {
-    height: 80, 
-    width: '100%', 
-    alignItems: "center", 
-    justifyContent: "center",
-  }, 
-  button: {
-    width: '85%',
-    height: '100%',
-    marginHorizontal: 5,
-    alignItems: "center", 
-    justifyContent: "center",
-  }
+  icon: {
+    height: 80,
+    width: "100%",
+  },
 });

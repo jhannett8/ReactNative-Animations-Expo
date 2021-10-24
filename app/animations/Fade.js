@@ -4,28 +4,28 @@ import { Animated, Text, View } from "react-native";
 import Style from "./Style";
 
 FadeAnimation = React.forwardRef(({}, ref) => {
-  const fadePlay = useRef(new Animated.Value(0)).current;
+  const fade = useRef(new Animated.Value(0)).current;
 
   React.useImperativeHandle(ref, () => ({
-    fadeInPlay,
-    fadeOutPlay,
+    fadeInAnimation,
+    fadeOutAnimation,
     fadeAnimation,
   }));
   const fadeAnimation = () => {
-    fadeInPlay();
+    fadeInAnimation();
     setTimeout(() => {
-      fadeOutPlay();
+      fadeOutAnimation();
     }, 600);
   };
-  const fadeInPlay = () => {
-    Animated.timing(fadePlay, {
+  const fadeInAnimation = () => {
+    Animated.timing(fade, {
       toValue: 0.35,
       //duration: 600,
       useNativeDriver: true,
     }).start();
   };
-  const fadeOutPlay = () => {
-    Animated.timing(fadePlay, {
+  const fadeOutAnimation = () => {
+    Animated.timing(fade, {
       toValue: 0,
       duration: 1250,
       useNativeDriver: true,
@@ -35,14 +35,14 @@ FadeAnimation = React.forwardRef(({}, ref) => {
     <View style={Style.AnimationContainer}>
       <Animated.View
         style={[
-            Style.fadingContainer,
+          Style.fadingContainer,
           {
             // Bind opacity to animated value
-            opacity: fadePlay,
+            opacity: fade,
           },
         ]}
       >
-        <Text>Tap Again To Fade Out</Text>
+        <Text>***Tap Again***</Text>
       </Animated.View>
     </View>
   );

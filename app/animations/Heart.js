@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { Animated, View } from "react-native";
-
-import Icon from "../svgIcons/Icon";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { colors } from "../Theme";
 import Style from "./Style";
@@ -39,15 +38,14 @@ HeartAnimation = React.forwardRef(({}, ref) => {
     <View style={Style.AnimationContainer}>
       <Animated.View
         style={[
-            Style.fadingContainer,
+          Style.fadingContainer,
           {
             // Bind opacity to animated value
             opacity: fadeHeart,
           },
         ]}
       >
-        <Icon name="heart" size={175} fill={colors.red} />
-        {/* <MaterialCommunityIcons name="heart" size={175} color={colors.red} /> */}
+        <MaterialCommunityIcons name="heart" size={175} color={colors.red} />
       </Animated.View>
     </View>
   );
