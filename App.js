@@ -6,7 +6,6 @@ import FadeAnimation from "./app/animations/Fade";
 import GenericModal from "./app/modals/GenericModal";
 import Like from "./app/icons/Like";
 import { colors } from "./app/Theme";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   //Like
