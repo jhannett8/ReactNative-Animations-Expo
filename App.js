@@ -36,21 +36,6 @@ export default function App() {
     }
   };
 
-  const handleFade = () => {
-    fadeAnimation();
-  }
-
-  const handleLike = () => {
-    setIsLiked((prevLike) => !prevLike);
-    if (isLiked == true) {
-      setNumberOfLikes(numberOfLikes - 1);
-      setIsLiked(false);
-    } else {
-      setNumberOfLikes(numberOfLikes + 1);
-      setIsLiked(true);
-    }
-  }
-
   
   const handleSinglePress = async () => {
     if (!isFadeLoaded) {
@@ -117,14 +102,10 @@ export default function App() {
         onLongPress={onManualLongPress}
       >
         <View style={styles.container}>
-          <View style={{ alignItems: "center" }}>
-            <Text>***Single tap for fade Animation***</Text>
-            <Text>***Double tap to like/unlike***</Text>
-          </View>
           {/* Animations */}
           <HeartAnimation ref={animationHeartRef} />
           <FadeAnimation ref={animationFadeRef} />
-          <View style={{ flexDirection: "column-reverse" }}>
+          <View >
             <View style={styles.icon}>
               <Like
                 isLiked={isLiked}
@@ -135,20 +116,25 @@ export default function App() {
                 textColor={colors.darkGray}
               />
             </View>
-            <TouchableWithoutFeedback onPress={handleLike}>
+            <TouchableWithoutFeedback onPress={handleDoublePress}>
               <View style={styles.buttonContainer}>
                 <View style={styles.button}>
                   <Text>Like Animation</Text>
                 </View>
               </View>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={handleFade}>
+            <TouchableWithoutFeedback onPress={handleSinglePress}>
               <View style={styles.buttonContainer}>
                 <View style={styles.button}>
                   <Text>Fade Animation</Text>
                 </View>
               </View>
             </TouchableWithoutFeedback>
+          </View>
+          <View style={{ alignItems: "center", paddingTop: 20 }}>
+            <Text style={{fontSize: 20, color: colors.slategray}}>Single tap for fade Animation</Text>
+            <Text style={{fontSize: 20, color: colors.slategray}}>Press and Hold for a Modal</Text>
+            <Text style={{fontSize: 20, color: colors.slategray}}>Double tap to like/unlike</Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -168,11 +154,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    width: "85%",
-    height: "100%",
+    width: "50%",
+    height: 45,
     marginHorizontal: 5,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: colors.darkRed,
+    borderRadius: 10,
   },
   container: {
     flex: 1,
